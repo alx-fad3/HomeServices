@@ -12,6 +12,7 @@ namespace HomeServices.Services
         IEnumerable<string> GetDirectoriesList(string path);
         byte[] GetFile(string path);
         byte[] GetFiles(string path);
-        
+        Task<byte[]> GetFileAsync(string path);
+        Task<byte[]> GetFilesAsync(string path);
     }
 }

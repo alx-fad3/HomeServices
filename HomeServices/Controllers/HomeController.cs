@@ -38,6 +38,12 @@ namespace HomeServices.Controllers
             var files = _dataManager.Files
                 .GetByDirectoryId(id)
                 .OrderBy(f => f.Name).ToList();
+
+            ViewBag.directoryName = _dataManager.Directories.GetAll()
+                .FirstOrDefault(d => d.Id == id).Path;
+
+            ViewBag.directoryId = id;
+
             return View(files);
         }
     }

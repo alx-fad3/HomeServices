@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using HomeServices.Services;
 using System;
+using System.Threading.Tasks;
 
 namespace HomeServices.Controllers
 {
@@ -22,12 +23,12 @@ namespace HomeServices.Controllers
 
 
         [HttpGet("getzip")]
-        public IActionResult GetDirectoryZip(int id)
+        public async Task<IActionResult> GetDirectoryZip(int id)
         {
             var dirs = _dataManager.Directories.GetAll();
             var dir = dirs.FirstOrDefault(d => d.Id == id);
             var zipFileName = dir.Path.Split('\\').Last() + ".zip";
-            return File(_fileManager.GetFiles(dir.Path), "application/zip", zipFileName);
+            return File(await _fileManager.GetFilesAsync(dir.Path), "application/zip", zipFileName);
         }
 
         public string FillDatabase()
@@ -39,11 +40,11 @@ namespace HomeServices.Controllers
         }
 
         [HttpGet("getfile")]
-        public IActionResult GetFile(int id)
+        public async Task<IActionResult> GetFile(int id)
         {
             var file = _dataManager.Files.GetById(id);
             var directory = _dataManager.Directories.GetById(file.DirectoryId);
-            return File(_fileManager.GetFile($"{directory.Path}\\{file.Name}"), "audio/mpeg", file.Name);
+            return File(await _fileManager.GetFileAsync($"{directory.Path}\\{file.Name}"), "audio/mpeg", file.Name);
         }
     }
 }

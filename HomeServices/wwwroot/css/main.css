@@ -122,9 +122,10 @@ ul {
 
 a {
   color: #5d93a2;
-  text-decoration: underline; }
-  a:hover {
-    text-decoration: none; }
+  text-decoration: none; }
+    a:hover {
+        text-decoration: underline;
+    }
 
 * > p:last-child {
   margin-bottom: 0 !important; }

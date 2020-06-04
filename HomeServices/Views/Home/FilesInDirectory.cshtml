@@ -4,33 +4,39 @@
     ViewData["Title"] = "FilesInDirectory";
 }
 <br />
-<h1>FilesInDirectory</h1>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Size)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Size)
-            </td>
-            <td>
-                <a asp-controller="music" asp-action="GetFile" asp-route-id="@item.Id">Download</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<h2>Files in directory</h2>
+<hr />
+<h3>@ViewBag.directoryName</h3>
+<a asp-controller="music" asp-action="GetDirectoryZip" asp-route-id="@ViewBag.directoryId">Download directory</a>
+<br />
+<div>
+    <table class="table table-hover" id="filesTable">
+        <thead class="thead-dark">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Size)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Size) Mb
+                    </td>
+                    <td>
+                        <a asp-controller="music" asp-action="GetFile" asp-route-id="@item.Id">Download</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -4,34 +4,59 @@
     ViewData["Title"] = "MusicList";
 }
 <br />
-<h1>MusicList</h1>
+<h2><a asp-controller="home" asp-action="MusicList">Music List</a></h2>
 <hr />
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Path)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+<div>
+    <input class="form-control" type="text" placeholder="Search" id="search-text" onkeyup="tableSearch()">
+    <table class="table table-hover" id="musicTable">
+        <thead class="thead-dark">
             <tr>
-                <td>
-                    <a asp-controller="home" asp-action="FilesInDirectory" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Path)
-                </td>
-                <td>
-                    <a asp-controller="music" asp-action="GetDirectoryZip" asp-route-id="@item.Id">Download</a>
-                </td>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Path)
+                </th>
+                <th>Link</th>
+                <th></th>
             </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <a asp-controller="home" asp-action="FilesInDirectory" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Path)
+                    </td>
+                    <td>
+                        <a asp-controller="music" asp-action="GetDirectoryZip" asp-route-id="@item.Id">Download</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript">
+    // https://tyapk.ru/blog/post/javascript-table-search
+    function tableSearch() {
+    var phrase = document.getElementById('search-text');
+    var table = document.getElementById('musicTable');
+    var regPhrase = new RegExp(phrase.value, 'i');
+    var flag = false;
+    for (var i = 1; i < table.rows.length; i++) {
+        flag = false;
+        for (var j = table.rows[i].cells.length - 1; j >= 0; j--) {
+            flag = regPhrase.test(table.rows[i].cells[j].innerHTML);
+            if (flag) break;
         }
-    </tbody>
-</table>
+        if (flag) {
+            table.rows[i].style.display = "";
+        } else {
+            table.rows[i].style.display = "none";
+        }
+    }
+}
+</script>

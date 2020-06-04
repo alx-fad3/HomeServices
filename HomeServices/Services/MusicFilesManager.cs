@@ -50,5 +50,15 @@ namespace HomeServices.Services
 
             return File.ReadAllBytes($"{path}.zip");
         }
+
+        public async Task<byte[]> GetFilesAsync(string path)
+        {
+            return await Task.Run(() => GetFiles(path));
+        }
+
+        public async Task<byte[]> GetFileAsync(string path)
+        {
+            return await Task.Run(() => GetFile(path));
+        }
     }
 }
