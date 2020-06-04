@@ -10,9 +10,15 @@ namespace HomeServices.Services
         private readonly MusicFilesManager _fileManager;
         private readonly DataManager _dataManager;
 
-        public bool FillDatabase()
+        public DbFiller(MusicFilesManager fm, DataManager dm)
         {
-            var directories = _fileManager.GetDirectoriesList("D:\\Music");
+            _fileManager = fm;
+            _dataManager = dm;
+        }
+
+        public void FillDatabase(string path)
+        {
+            var directories = _fileManager.GetDirectoriesList(path);
             var dl = new List<DirectoryModel>();
             foreach (var d in directories)
             {
@@ -23,13 +29,13 @@ namespace HomeServices.Services
                 });
             }
             _dataManager.Directories.AddDirectories(dl);
-           
-            return true;
+
+            FillFiles(path);
         }
 
-        public bool FillFiles()
+        private void FillFiles(string path)
         {
-            var files = _fileManager.GetFilesList("D:\\Music");
+            var files = _fileManager.GetFilesList(path);
             var fileInfos = new List<FileInfo>();
             foreach (var f in files)
             {
@@ -51,7 +57,6 @@ namespace HomeServices.Services
                 });
             }
             _dataManager.Files.AddFiles(fl);
-            return true;
         }
     }
 }

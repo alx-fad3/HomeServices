@@ -31,10 +31,9 @@ namespace HomeServices.Controllers
             return File(await _fileManager.GetFilesAsync(dir.Path), "application/zip", zipFileName);
         }
 
-        public string FillDatabase()
+        public string FillDatabase(string path)
         {
-            var dirsReady = _dbFiller.FillDatabase();
-            var filesReady = _dbFiller.FillFiles();
+            _dbFiller.FillDatabase(path);
 
             return "Ready";
         }
