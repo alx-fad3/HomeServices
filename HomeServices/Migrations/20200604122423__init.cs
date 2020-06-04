@@ -30,7 +30,7 @@ namespace HomeServices.Migrations
                     Extension = table.Column<string>(nullable: true),
                     Size = table.Column<double>(nullable: false),
                     Exists = table.Column<bool>(nullable: false),
-                    DirectoryId = table.Column<int>(nullable: true),
+                    DirectoryId = table.Column<int>(nullable: false),
                     DirectoryModelId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -41,18 +41,8 @@ namespace HomeServices.Migrations
                         column: x => x.DirectoryModelId,
                         principalTable: "DirectoryModels",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.InsertData(
-                table: "DirectoryModels",
-                columns: new[] { "Id", "Name", "Path" },
-                values: new object[] { 1, "Init", null });
-
-            migrationBuilder.InsertData(
-                table: "FileModels",
-                columns: new[] { "Id", "DirectoryId", "DirectoryModelId", "Exists", "Extension", "Name", "Size" },
-                values: new object[] { 1, null, null, false, null, "Init", 0.0 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_FileModels_DirectoryModelId",

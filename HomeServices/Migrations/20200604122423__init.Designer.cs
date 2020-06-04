@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeServices.Migrations
 {
     [DbContext(typeof(HomeDbContext))]
-    [Migration("20200603083133__init")]
+    [Migration("20200604122423__init")]
     partial class _init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,13 +37,6 @@ namespace HomeServices.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DirectoryModels");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Init"
-                        });
                 });
 
             modelBuilder.Entity("HomeServices.Models.FileModel", b =>
@@ -53,7 +46,7 @@ namespace HomeServices.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("DirectoryId")
+                    b.Property<int>("DirectoryId")
                         .HasColumnType("int");
 
                     b.Property<int?>("DirectoryModelId")
@@ -76,22 +69,14 @@ namespace HomeServices.Migrations
                     b.HasIndex("DirectoryModelId");
 
                     b.ToTable("FileModels");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Exists = false,
-                            Name = "Init",
-                            Size = 0.0
-                        });
                 });
 
             modelBuilder.Entity("HomeServices.Models.FileModel", b =>
                 {
                     b.HasOne("HomeServices.Models.DirectoryModel", "DirectoryModel")
                         .WithMany("Files")
-                        .HasForeignKey("DirectoryModelId");
+                        .HasForeignKey("DirectoryModelId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

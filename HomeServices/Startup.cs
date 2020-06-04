@@ -33,15 +33,15 @@ namespace HomeServices
         {
             Configuration.Bind("Project", new Config());
 
-            services.AddDbContext<HomeDbContext>(o => 
+            services.AddDbContext<HomeDbContext>(o =>
                 o.UseLazyLoadingProxies()
                 .UseSqlServer(Config.ConnectionString));
 
-            services.AddTransient<DbFiller>(); // 
             services.AddTransient<IFileManager, MusicFilesManager>();
             services.AddTransient<IDirectoryModelRepository, EFDirectoryModelRepository>();
             services.AddTransient<IFileModelRepository, EFFileModelRepository>();
             services.AddTransient<DataManager>();
+            services.AddTransient<DbFiller>();
 
             services.AddControllersWithViews();
             //services.AddControllers();

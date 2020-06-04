@@ -16,7 +16,7 @@ namespace HomeServices.Models
         [Display(Name = "Size")]
         public double Size { get; set; }
         public bool Exists { get; set; }
-        public int DirectoryId { get; set; }
+        public int? DirectoryId { get; set; }
         public virtual DirectoryModel DirectoryModel { get; set; }
 
     }

@@ -25,7 +25,7 @@
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
+                <tr id="@item.Id">
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>
@@ -33,10 +33,27 @@
                         @Html.DisplayFor(modelItem => item.Size) Mb
                     </td>
                     <td>
-                        <a asp-controller="music" asp-action="GetFile" asp-route-id="@item.Id">Download</a>
+                        <a asp-controller="music" asp-action="GetFile" asp-route-id="@item.Id">Download</a> |
+                        <a href="#" onclick="deleteItem(@item.Id)">Delete</a>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
 </div>
+<script type="text/javascript">
+
+    function deleteItem(id) {
+        $.ajax({
+            url: '/api/music/' + id,
+            type: 'DELETE',
+            success: function () {
+                document.getElementById(id).remove();
+            },
+            error: function (x, y, z) {
+                alert(x + '\n' + y + '\n' + z);
+            }
+        });
+    }
+
+</script>

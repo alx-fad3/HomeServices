@@ -2,17 +2,27 @@ using System.Collections.Generic;
 using HomeServices.Models;
 using System.IO;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace HomeServices.Services
 {
     public class DbFiller
     {
-        private readonly MusicFilesManager _fileManager;
+        private readonly IFileManager _fileManager;
         private readonly DataManager _dataManager;
+        private readonly HomeDbContext _db;
 
-        public bool FillDatabase()
+        public DbFiller(IFileManager fm, DataManager dm, HomeDbContext db)
         {
-            var directories = _fileManager.GetDirectoriesList("D:\\Music");
+            _fileManager = fm;
+            _dataManager = dm;
+            _db = db;
+        }
+
+        public void FillDatabase(string path)
+        {
+            var directories = _fileManager.GetDirectoriesList(path);
             var dl = new List<DirectoryModel>();
             foreach (var d in directories)
             {
@@ -23,13 +33,13 @@ namespace HomeServices.Services
                 });
             }
             _dataManager.Directories.AddDirectories(dl);
-           
-            return true;
+
+            //FillFiles(path);
         }
 
-        public bool FillFiles()
+        public void FillFiles(string path)
         {
-            var files = _fileManager.GetFilesList("D:\\Music");
+            var files = _fileManager.GetFilesList(path);
             var fileInfos = new List<FileInfo>();
             foreach (var f in files)
             {
@@ -41,17 +51,30 @@ namespace HomeServices.Services
             var fl = new List<FileModel>();
             foreach (var f in fileInfos)
             {
-                fl.Add(new FileModel
+                try
                 {
-                    Name = f.Name,
-                    Extension = f.Extension,
-                    Size = f.Length,
-                    Exists = f.Exists,
-                    DirectoryId = dirs.FirstOrDefault(d => d.Path == f.DirectoryName).Id
-                });
+                    fl.Add(new FileModel
+                    {
+                        Name = f.Name,
+                        Extension = f.Extension,
+                        Size = (f.Length / 1024) / 1024,
+                        Exists = f.Exists,
+                        DirectoryId = dirs.FirstOrDefault(d => d.Path == f.DirectoryName).Id
+                    });
+                }
+                catch(Exception ex)
+                {
+                    throw new Exception(f.DirectoryName, ex);
+                }
             }
             _dataManager.Files.AddFiles(fl);
-            return true;
+
+            RemoveEmptyDirectories();
+        }
+
+        private void RemoveEmptyDirectories()
+        {
+            int z = _db.Database.ExecuteSqlRaw("exec sp_RemoveEmptyDirectories");
         }
     }
 }

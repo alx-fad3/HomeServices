@@ -39,7 +39,24 @@ namespace HomeServices.Models.Repositories.EntityFramework
 
         public void AddDirectories(IEnumerable<DirectoryModel> directories)
         {
-            _db.DirectoryModels.AddRange(directories);
+            if(directories.ToList().Count > 15)
+            {
+                foreach(var d in directories)
+                {
+                    AddDirectory(d);
+                }
+            }
+            else
+            {
+                _db.DirectoryModels.AddRange(directories);
+                _db.SaveChanges();
+            } 
+        }
+
+        public void DeleteDirectory(int id)
+        {
+            _db.DirectoryModels.Remove(
+                _db.DirectoryModels.FirstOrDefault(d => d.Id == id));
             _db.SaveChanges();
         }
     }

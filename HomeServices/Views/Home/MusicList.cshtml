@@ -24,7 +24,7 @@
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
+                <tr id="@item.Id">
                     <td>
                         <a asp-controller="home" asp-action="FilesInDirectory" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
                     </td>
@@ -32,7 +32,8 @@
                         @Html.DisplayFor(modelItem => item.Path)
                     </td>
                     <td>
-                        <a asp-controller="music" asp-action="GetDirectoryZip" asp-route-id="@item.Id">Download</a>
+                        <a asp-controller="music" asp-action="GetDirectoryZip" asp-route-id="@item.Id">Download</a> |
+                        <a href="#" onclick="deleteItem(@item.Id)">Delete</a>
                     </td>
                 </tr>
             }
@@ -40,23 +41,37 @@
     </table>
 </div>
 <script type="text/javascript">
+
     // https://tyapk.ru/blog/post/javascript-table-search
     function tableSearch() {
-    var phrase = document.getElementById('search-text');
-    var table = document.getElementById('musicTable');
-    var regPhrase = new RegExp(phrase.value, 'i');
-    var flag = false;
-    for (var i = 1; i < table.rows.length; i++) {
-        flag = false;
-        for (var j = table.rows[i].cells.length - 1; j >= 0; j--) {
-            flag = regPhrase.test(table.rows[i].cells[j].innerHTML);
-            if (flag) break;
-        }
-        if (flag) {
-            table.rows[i].style.display = "";
-        } else {
-            table.rows[i].style.display = "none";
+        var phrase = document.getElementById('search-text');
+        var table = document.getElementById('musicTable');
+        var regPhrase = new RegExp(phrase.value, 'i');
+        var flag = false;
+        for (var i = 1; i < table.rows.length; i++) {
+            flag = false;
+            for (var j = table.rows[i].cells.length - 1; j >= 0; j--) {
+                flag = regPhrase.test(table.rows[i].cells[j].innerHTML);
+                if (flag) break;
+            }
+            if (flag) {
+                table.rows[i].style.display = "";
+            } else {
+                table.rows[i].style.display = "none";
+            }
         }
     }
-}
+
+    function deleteItem(id) {
+        $.ajax({
+            url: '/api/music/deletedir/' + id,
+            type: 'DELETE',
+            success: function () {
+                document.getElementById(id).remove();
+            },
+            error: function (x, y, z) {
+                alert(x + '\n' + y + '\n' + z);
+            }
+        });
+    }
 </script>

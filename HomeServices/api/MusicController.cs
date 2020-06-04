@@ -21,6 +21,13 @@ namespace HomeServices.Controllers
             _dbFiller = df;
         }
 
+        [HttpGet("test")]
+        public string Test()
+        
+        {
+            FillDatabase("D:\\Music");
+            return "ololo";
+        }
 
         [HttpGet("getzip")]
         public async Task<IActionResult> GetDirectoryZip(int id)
@@ -31,20 +38,33 @@ namespace HomeServices.Controllers
             return File(await _fileManager.GetFilesAsync(dir.Path), "application/zip", zipFileName);
         }
 
-        public string FillDatabase()
+        [HttpGet("filldb")]
+        public string FillDatabase(string path)
         {
-            var dirsReady = _dbFiller.FillDatabase();
-            var filesReady = _dbFiller.FillFiles();
+            _dbFiller.FillDatabase(path);
+            _dbFiller.FillFiles(path);
 
-            return "Ready";
+            return $"Added: {path}";
         }
 
         [HttpGet("getfile")]
         public async Task<IActionResult> GetFile(int id)
         {
             var file = _dataManager.Files.GetById(id);
-            var directory = _dataManager.Directories.GetById(file.DirectoryId);
+            var directory = _dataManager.Directories.GetById((int)file.DirectoryId);
             return File(await _fileManager.GetFileAsync($"{directory.Path}\\{file.Name}"), "audio/mpeg", file.Name);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task DeleteFile(int id)
+        {
+            await Task.Run(() => _dataManager.Files.DeleteFile(id));
+        }
+
+        [HttpDelete("deletedir/{id}")]
+        public async Task DeleteDirectory(int id)
+        {
+            await Task.Run(() => _dataManager.Directories.DeleteDirectory(id));
         }
     }
 }

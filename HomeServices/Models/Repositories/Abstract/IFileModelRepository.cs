@@ -14,5 +14,6 @@ namespace HomeServices.Models.Repositories.Abstract
         FileModel GetByExtension(string ext);
         void AddFile(FileModel file);
         void AddFiles(IEnumerable<FileModel> files);
+        void DeleteFile(int id);
     }
 }

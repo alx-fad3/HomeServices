@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using HomeServices.Models;
 using HomeServices.Services;
+using System.Net;
+using System.Net.Sockets;
 
 namespace HomeServices.Controllers
 {
@@ -23,7 +25,22 @@ namespace HomeServices.Controllers
 
         public IActionResult Index()
         {
+            ViewBag.localIp = GetLocalIPAddress();
+            
             return View();
+        }
+
+        private string GetLocalIPAddress()
+        {
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    return ip.ToString();
+                }
+            }
+            throw new Exception("No network adapters with an IPv4 address in the system!");
         }
 
         public IActionResult MusicList()

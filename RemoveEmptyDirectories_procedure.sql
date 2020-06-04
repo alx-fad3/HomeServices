@@ -1,5 +1,4 @@
-﻿USE HomeDb
-CREATE PROCEDURE [dbo].[RemoveEmptyDirectories]
+﻿CREATE PROCEDURE [dbo].[sp_RemoveEmptyDirectories]
 AS
 	WITH a AS(
 	SELECT dm.Id, dm.Name dName, dm.Path, fm.Name
@@ -11,11 +10,3 @@ AS
 	FROM DirectoryModels
 	WHERE Id in (SELECT Id FROM a)
 RETURN 0
-
-
-
---UPDATE FileModels
---SET Size = ROUND((Size / 1024) / 1024, 2)
-
-select * from FileModels
-
