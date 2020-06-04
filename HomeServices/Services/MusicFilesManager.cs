@@ -34,7 +34,7 @@ namespace HomeServices.Services
 
             var directories = Directory.GetDirectories(path, "", SearchOption.AllDirectories).ToList();
 
-            if(directories.Count == 0) directories.Add(path);
+            if(!directories.Contains(path)) directories.Add(path);
 
             return directories;
         }

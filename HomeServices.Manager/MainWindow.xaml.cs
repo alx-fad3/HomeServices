@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Forms;
+using System.IO;
 
 namespace HomeServices.Manager
 {
@@ -43,14 +44,29 @@ namespace HomeServices.Manager
         private void btnGo_Click(object sender, RoutedEventArgs e)
         {
             var responses = new List<string>();
-            pbLoading.Maximum = lbDirectories.Items.Count;
 
-            foreach(var i in lbDirectories.Items)
+            var directories = Directory.GetDirectories(
+                lbDirectories.Items[0].ToString(), "", SearchOption.AllDirectories).ToList();
+
+            if(directories.Count > 1)
             {
-                responses.Add(_musicApi.AddDirectory(i.ToString()));
-                pbLoading.Value++;
+                pbLoading.Maximum = directories.Count;
+                foreach (var d in directories)
+                {
+                    responses.Add(_musicApi.AddDirectory(d));
+                    pbLoading.Value++;
+                }
             }
-
+            else
+            {
+                pbLoading.Maximum = lbDirectories.Items.Count;
+                foreach (var i in lbDirectories.Items)
+                {
+                    responses.Add(_musicApi.AddDirectory(i.ToString()));
+                    pbLoading.Value++;
+                }
+            }
+            
             foreach(string r in responses)
             {
                 System.Windows.MessageBox.Show(r);

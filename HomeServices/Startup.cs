@@ -33,7 +33,7 @@ namespace HomeServices
         {
             Configuration.Bind("Project", new Config());
 
-            services.AddDbContext<HomeDbContext>(o => 
+            services.AddDbContext<HomeDbContext>(o =>
                 o.UseLazyLoadingProxies()
                 .UseSqlServer(Config.ConnectionString));
 

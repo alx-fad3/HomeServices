@@ -45,8 +45,18 @@ namespace HomeServices.Models.Repositories.EntityFramework
 
         public void AddFiles(IEnumerable<FileModel> files)
         {
-            _db.AddRange(files);
-            _db.SaveChanges();
+            if(files.ToList().Count > 15)
+            {
+                foreach(var f in files)
+                {
+                    AddFile(f);
+                }
+            }
+            else
+            {
+                _db.AddRange(files);
+                _db.SaveChanges();
+            }
         }
 
         public void DeleteFile(int id)

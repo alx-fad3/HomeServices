@@ -23,8 +23,9 @@ namespace HomeServices.Controllers
 
         [HttpGet("test")]
         public string Test()
+        
         {
-            DeleteFile(4622);
+            FillDatabase("D:\\Music");
             return "ololo";
         }
 
@@ -41,6 +42,7 @@ namespace HomeServices.Controllers
         public string FillDatabase(string path)
         {
             _dbFiller.FillDatabase(path);
+            _dbFiller.FillFiles(path);
 
             return $"Added: {path}";
         }

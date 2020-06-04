@@ -3,6 +3,7 @@ using HomeServices.Models;
 using System.IO;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace HomeServices.Services
 {
@@ -33,10 +34,10 @@ namespace HomeServices.Services
             }
             _dataManager.Directories.AddDirectories(dl);
 
-            FillFiles(path);
+            //FillFiles(path);
         }
 
-        private void FillFiles(string path)
+        public void FillFiles(string path)
         {
             var files = _fileManager.GetFilesList(path);
             var fileInfos = new List<FileInfo>();
@@ -50,14 +51,21 @@ namespace HomeServices.Services
             var fl = new List<FileModel>();
             foreach (var f in fileInfos)
             {
-                fl.Add(new FileModel
+                try
                 {
-                    Name = f.Name,
-                    Extension = f.Extension,
-                    Size = (f.Length / 1024) / 1024,
-                    Exists = f.Exists,
-                    DirectoryId = dirs.FirstOrDefault(d => d.Path == f.DirectoryName).Id
-                });
+                    fl.Add(new FileModel
+                    {
+                        Name = f.Name,
+                        Extension = f.Extension,
+                        Size = (f.Length / 1024) / 1024,
+                        Exists = f.Exists,
+                        DirectoryId = dirs.FirstOrDefault(d => d.Path == f.DirectoryName).Id
+                    });
+                }
+                catch(Exception ex)
+                {
+                    throw new Exception(f.DirectoryName, ex);
+                }
             }
             _dataManager.Files.AddFiles(fl);
 

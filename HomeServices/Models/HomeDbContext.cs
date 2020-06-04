@@ -13,6 +13,10 @@ namespace HomeServices.Models
         public DbSet<FileModel> FileModels { get; set; }
         public DbSet<DirectoryModel> DirectoryModels { get; set; }
 
+        //public HomeDbContext()
+        //{
+        //    Database.SetCommandTimeout(150000);
+        //}
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<FileModel>()
