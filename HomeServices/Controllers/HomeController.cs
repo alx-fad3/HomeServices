@@ -26,6 +26,7 @@ namespace HomeServices.Controllers
         public IActionResult Index()
         {
             ViewBag.localIp = GetLocalIPAddress();
+            
             return View();
         }
 

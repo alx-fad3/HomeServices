@@ -2,18 +2,21 @@ using System.Collections.Generic;
 using HomeServices.Models;
 using System.IO;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace HomeServices.Services
 {
     public class DbFiller
     {
-        private readonly MusicFilesManager _fileManager;
+        private readonly IFileManager _fileManager;
         private readonly DataManager _dataManager;
+        private readonly HomeDbContext _db;
 
-        public DbFiller(MusicFilesManager fm, DataManager dm)
+        public DbFiller(IFileManager fm, DataManager dm, HomeDbContext db)
         {
             _fileManager = fm;
             _dataManager = dm;
+            _db = db;
         }
 
         public void FillDatabase(string path)
@@ -51,12 +54,19 @@ namespace HomeServices.Services
                 {
                     Name = f.Name,
                     Extension = f.Extension,
-                    Size = f.Length,
+                    Size = (f.Length / 1024) / 1024,
                     Exists = f.Exists,
                     DirectoryId = dirs.FirstOrDefault(d => d.Path == f.DirectoryName).Id
                 });
             }
             _dataManager.Files.AddFiles(fl);
+
+            RemoveEmptyDirectories();
+        }
+
+        private void RemoveEmptyDirectories()
+        {
+            int z = _db.Database.ExecuteSqlRaw("exec sp_RemoveEmptyDirectories");
         }
     }
 }

@@ -32,7 +32,11 @@ namespace HomeServices.Services
         {
             if (!Directory.Exists(path)) throw new DirectoryNotFoundException();
 
-            return Directory.GetDirectories(path, "", SearchOption.AllDirectories);
+            var directories = Directory.GetDirectories(path, "", SearchOption.AllDirectories).ToList();
+
+            if(directories.Count == 0) directories.Add(path);
+
+            return directories;
         }
 
         public byte[] GetFile(string path)

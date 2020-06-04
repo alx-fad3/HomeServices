@@ -13,5 +13,6 @@ namespace HomeServices.Models.Repositories.Abstract
         DirectoryModel GetByPath(string path);
         void AddDirectory(DirectoryModel directory);
         void AddDirectories(IEnumerable<DirectoryModel> directories);
+        void DeleteDirectory(int id);
     }
 }
